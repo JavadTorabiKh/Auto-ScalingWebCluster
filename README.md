@@ -113,3 +113,72 @@ Software
 ```
 
 ---
+
+## 🎯 Usage
+
+Start Auto-Scaling
+
+```bash
+    ansible-playbook scale_up.yml -e "traffic_threshold=80"
+```
+
+Configure Backups
+```bash
+    python backup_manager.py --schedule daily --retention 7
+```
+
+Access Monitoring
+
+```bash
+    kubectl port-forward svc/grafana 3000:3000
+    Visit http://localhost:3000 for dashboard.
+```
+
+---
+
+## 📚 Technical Documentation
+    File Structure
+    ├── ansible/
+    │   ├── roles/
+    │   │   ├── scaling/
+    │   │   └── backup/
+    ├── terraform/
+    ├── monitoring/
+    └── docs/
+        ├── ARCHITECTURE.md
+        └── API_REFERENCE.md
+
+---
+
+## 🤝 Contributing
+We welcome contributions! Please:
+
+1. Fork the repository
+
+2. Create your feature branch (git checkout -b feature/AmazingFeature)
+
+3. Commit your changes (git commit -m 'Add some AmazingFeature')
+
+4. Push to the branch (git push origin feature/AmazingFeature)
+
+5. Open a Pull Request
+
+---
+
+
+## 📜 License
+
+Distributed under the MIT License. See LICENSE for more information.
+
+---
+
+## ✉️ Contact
+
+📧 Email: javadtorabi462@gmail.com
+
+💼 LinkedIn: javadTorabi
+
+🌐 Project Link: [GitHub Repository](https://github.com/JavadTorabiKh/Auto-ScalingWebCluster)
+
+
+
