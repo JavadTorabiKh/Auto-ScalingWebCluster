@@ -89,7 +89,7 @@ Software
 1. Clone Repository
 
 ```bash
-    git clone https://github.com/your-repo/vmware-auto-scaling.git
+    git clone https://github.com/JavadTorabiKh/Auto-ScalingWebCluster.git
     cd vmware-auto-scaling
 ```
 
