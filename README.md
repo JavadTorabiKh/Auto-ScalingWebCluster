@@ -74,30 +74,42 @@ Hardware
 
 
 Software
-    - VMware ESXi 7.0+
+- VMware ESXi 7.0+
 
-    - Ansible 2.12+
+- Ansible 2.12+
 
-    - Terraform 1.3+
+- Terraform 1.3+
 
-    - Python 3.9+
+- Python 3.9+
 
 ---
 
 
-⚙️ Installation
+## ⚙️ Installation
+
 1. Clone Repository
-bash
-git clone https://github.com/your-repo/vmware-auto-scaling.git
-cd vmware-auto-scaling
+
+```bash
+    git clone https://github.com/your-repo/vmware-auto-scaling.git
+    cd vmware-auto-scaling
+```
+
 2. Configure Environment
-bash
-cp .env.example .env
-nano .env  # Edit with your credentials
+
+```bash
+    cp .env.example .env
+    nano .env  # Edit with your credentials
+```
+
 3. Install Dependencies
-bash
-pip install -r requirements.txt
-ansible-galaxy install -r requirements.yml
+```bash
+    pip install -r requirements.txt
+    ansible-galaxy install -r requirements.yml
+```
+
 4. Initialize System
-bash
-./deploy.sh --init
+```bash
+    ./deploy.sh --init
+```
+
+---
