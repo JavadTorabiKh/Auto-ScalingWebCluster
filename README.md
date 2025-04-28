@@ -1,6 +1,5 @@
 # 🚀 VMware Auto-Scaling Web Cluster with Smart Backup System
-
-![Project Banner](https://via.placeholder.com/1500x500?text=Auto-Scaling+Web+Cluster+with+Smart+Backup)  
+  
 *A hybrid intelligent system for automated web cluster management and backup on VMware ESXi*
 
 ## 📌 Table of Contents
