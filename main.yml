@@ -1,0 +1,24 @@
+---
+- name: Configure Physical Server
+  hosts: physical_server
+  become: yes
+  vars_files:
+    - group_vars/all.yml
+
+  tasks:
+    - name: Partition Disks
+      include_role:
+        name: storage_config
+      tags: storage
+
+    - name: Install GitLab
+      include_role:
+        name: gitlab
+      when: gitlab_enabled | default(false)
+      tags: gitlab
+
+    - name: Deploy Microservices
+      include_role:
+        name: microservices
+      when: microservices_enabled | default(false)
+      tags: microservices

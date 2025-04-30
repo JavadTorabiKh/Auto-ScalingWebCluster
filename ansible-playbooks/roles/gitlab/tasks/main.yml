@@ -1,0 +1,22 @@
+---
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+
+- name: Run GitLab CE
+  docker_container:
+    name: gitlab
+    image: gitlab/gitlab-ce:latest
+    restart_policy: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "22:22"
+    volumes:
+      - "/gitlab/config:/etc/gitlab"
+      - "/gitlab/logs:/var/log/gitlab"
+      - "/gitlab/data:/var/opt/gitlab"
+    env:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://{{ ansible_host }}'
