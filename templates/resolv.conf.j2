@@ -1,0 +1,6 @@
+# Managed by Ansible - DO NOT EDIT MANUALLY
+{% for server in network.dns_servers %}
+nameserver {{ server }}
+{% endfor %}
+
+search example.com
