@@ -1,0 +1,17 @@
+---
+# Network Infrastructure Configuration
+network:
+  dns_servers:
+    - 8.8.8.8
+    - 1.1.1.1
+  proxy:
+    http: "http://proxy.example.com:8080"
+    https: "http://proxy.example.com:8080"
+    no_proxy: "localhost,127.0.0.1,.internal"
+
+# Time Configuration
+time:
+  timezone: Asia/Tehran
+  ntp_servers:
+    - 0.ir.pool.ntp.org
+    - 1.ir.pool.ntp.org

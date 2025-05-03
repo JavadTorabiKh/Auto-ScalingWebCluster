@@ -1,7 +1,8 @@
-timezone: Asia/Tehran
-admin_user: devops
 
-firewall_rules:
-  - { port: 80, proto: tcp }
-  - { port: 443, proto: tcp }
-  - { port: 22, proto: tcp }
+# Environment marker (override in environment-specific files)
+env: production
+debug: false
+
+logging:
+  level: info
+  path: /var/log/app

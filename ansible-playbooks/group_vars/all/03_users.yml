@@ -1,0 +1,19 @@
+---
+# System Users Configuration
+users:
+  admins:
+    - name: devops
+      groups: sudo
+      ssh_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2E..."
+  developers:
+    - name: deploy
+      groups: www-data
+      ssh_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2E..."
+
+# Sudo Privileges
+sudo:
+  passwordless: true
+  extra_rules:
+    - "%devops ALL=(ALL) NOPASSWD: ALL"
