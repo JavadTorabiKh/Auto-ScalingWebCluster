@@ -41,4 +41,4 @@ This repository contains Ansible playbooks for automating infrastructure managem
 
 ## 📜 License
 
-### **MIT Ansible**
+### **MIT License**
