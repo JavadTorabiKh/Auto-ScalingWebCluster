@@ -9,6 +9,7 @@
     └── postgresql/ # DB servers (PostgreSQL/MySQL)
 ```
 
+---
 
 ## 🛠️ Usage
 
@@ -31,6 +32,7 @@
         vars:
         nginx_version: 1.25.0
 ```
+---
 
 ## 🔧 Best Practices
 
@@ -38,18 +40,24 @@
 
 - Use defaults/ for variables
 
-Document in meta/main.yml
+- Document in meta/main.yml
 
-Test with Molecule
+- Test with Molecule
 
-📜 Example Role Structure
-text
-role_name/
-├── defaults/      # Lowest priority vars
-├── files/         # Static files
-├── handlers/      # Service handlers
-├── meta/          # Dependencies
-├── tasks/         # Main playbook
-├── templates/     # Jinja2 templates
-└── vars/          # High priority vars
-Ansible
+---
+
+## 📜 Example Role Structure
+
+```text
+    role_name/
+    ├── defaults/      # Lowest priority vars
+    ├── files/         # Static files
+    ├── handlers/      # Service handlers
+    ├── meta/          # Dependencies
+    ├── tasks/         # Main playbook
+    ├── templates/     # Jinja2 templates
+    └── vars/          # High priority vars
+```
+
+
+![Ansible Version](https://img.shields.io/badge/Ansible-roles-red?logo=ansible)
