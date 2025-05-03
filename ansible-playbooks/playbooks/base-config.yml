@@ -1,7 +1,7 @@
 ---
 - name: Apply base configuration
   hosts: all
-  become: yes
+  become: true
   
   tasks:
     - name: Set timezone
