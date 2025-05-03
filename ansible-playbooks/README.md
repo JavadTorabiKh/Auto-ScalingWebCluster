@@ -43,4 +43,4 @@ This repository contains Ansible playbooks for automating infrastructure managem
 
 ### **MIT License**
 
-- [Official Docs](https://docs.ansible.com)
+![Ansible Version](https://img.shields.io/badge/Ansible-2.12+-red?logo=ansible)
