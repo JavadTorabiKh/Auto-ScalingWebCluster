@@ -24,6 +24,7 @@ This project provides a **fully automated solution** for managing web clusters o
 2. **Automated Backup System** with enterprise-grade encryption
 
 > 💡 **Why This Project Stands Out**  
+
 > The first open-source system that seamlessly combines cluster management and backup solutions for VMware using Ansible!
 
 ---
