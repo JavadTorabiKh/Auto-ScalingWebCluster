@@ -32,6 +32,7 @@ This project provides a **fully automated solution** for managing web clusters o
 ## ✨ Key Features
 
 ### 🌀 Auto-Scaling
+
 - Real-time traffic analysis (Nginx Logs)
 - Horizontal and vertical scaling
 - Prometheus integration for monitoring
