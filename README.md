@@ -20,6 +20,7 @@
 This project provides a **fully automated solution** for managing web clusters on VMware ESXi with two core integrated capabilities:
 
 1. **Intelligent Auto-Scaling** based on traffic and resource utilization
+
 2. **Automated Backup System** with enterprise-grade encryption
 
 > 💡 **Why This Project Stands Out**  
