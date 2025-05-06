@@ -55,7 +55,7 @@
       retries: 3
       delay: 5
       until: add_repo.rc == 0
-      ignore_errors: yes  # برای مدیریت مشکلات شبکه
+      ignore_errors: yes  
 
     - name: Update apt cache after adding repository
       apt:
