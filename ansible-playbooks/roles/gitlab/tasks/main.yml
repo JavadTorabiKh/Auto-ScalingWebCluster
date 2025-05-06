@@ -1,0 +1,81 @@
+---
+- name: Install GitLab CE on Ubuntu
+  hosts: gitlab_server
+  become: yes  # برای اجرای دستورات با sudo
+  vars:
+    gitlab_external_url: "http://192.168.83.224"
+    gitlab_edition: "gitlab-ce"  # برای Community Edition
+    dns_servers:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install prerequisites
+      apt:
+        name:
+          - curl
+          - openssh-server
+          - ca-certificates
+          - tzdata
+          - perl
+          - postfix
+        state: present
+
+    - name: Ensure Postfix is started and enabled
+      systemd:
+        name: postfix
+        state: started
+        enabled: yes
+
+    - name: Set DNS servers in Netplan
+      copy:
+        content: |
+          network:
+            version: 2
+            ethernets:
+              ens33:
+                nameservers:
+                  addresses:
+                    - 8.8.8.8
+                    - 8.8.4.4
+        dest: /etc/netplan/01-netcfg.yaml
+        mode: '0644'
+      notify: Apply Netplan
+
+    - name: Add GitLab package repository
+      shell: curl https://packages.gitlab.com/install/repositories/gitlab/{{ gitlab_edition }}/script.deb.sh | bash
+      args:
+        creates: /etc/apt/sources.list.d/gitlab_{{ gitlab_edition }}.list
+      register: add_repo
+      retries: 3
+      delay: 5
+      until: add_repo.rc == 0
+      ignore_errors: yes  # برای مدیریت مشکلات شبکه
+
+    - name: Update apt cache after adding repository
+      apt:
+        update_cache: yes
+      when: add_repo.rc == 0
+
+    - name: Install GitLab
+      apt:
+        name: "{{ gitlab_edition }}"
+        state: present
+      environment:
+        EXTERNAL_URL: "{{ gitlab_external_url }}"
+
+    - name: Reconfigure GitLab
+      command: gitlab-ctl reconfigure
+      when: add_repo.rc == 0
+
+    - name: Ensure GitLab services are running
+      systemd:
+        name: gitlab-runsvdir
+        state: started
+        enabled: yes
+
