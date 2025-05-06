@@ -4,7 +4,7 @@
   become: yes  # برای اجرای دستورات با sudo
   vars:
     gitlab_external_url: "http://192.168.83.224"
-    gitlab_edition: "gitlab-ce"  # برای Community Edition
+    gitlab_edition: "gitlab-ce"  
     dns_servers:
       - 8.8.8.8
       - 8.8.4.4
