@@ -1,7 +1,7 @@
 ---
 - name: Install GitLab CE on Ubuntu
   hosts: gitlab_server
-  become: true  # برای اجرای دستورات با sudo
+  become: true
   vars:
     gitlab_external_url: "http://192.168.83.224"
     gitlab_edition: "gitlab-ce"  
