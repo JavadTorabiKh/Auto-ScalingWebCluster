@@ -79,3 +79,6 @@
         state: started
         enabled: yes
 
+  handlers:
+    - name: Apply Netplan
+      command: netplan apply
