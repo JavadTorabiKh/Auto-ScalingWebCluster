@@ -3,7 +3,7 @@
 ssh:
   port: 2222
   permit_root_login: false
-  password_authentication: false
+  password_authentication: true
   allowed_users:
     - devops
     - deploy
