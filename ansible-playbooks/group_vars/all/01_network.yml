@@ -2,8 +2,8 @@
 # Network Infrastructure Configuration
 network:
   dns_servers:
-    - 8.8.8.8
-    - 1.1.1.1
+    - 78.157.42.101
+    - 78.157.42.100
   proxy:
     http: "http://proxy.example.com:8080"
     https: "http://proxy.example.com:8080"
