@@ -8,7 +8,7 @@
     gitlab_ssh_port: 2222
 
   tasks:
-    # مرحله 1: نصب Docker و پیش‌نیازها
+    # 1: prerequirements Docker-ce
     - name: Install required packages
       dnf:
         name:
