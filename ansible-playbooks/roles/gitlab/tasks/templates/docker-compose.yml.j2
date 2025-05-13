@@ -17,3 +17,4 @@ services:
       - {{ gitlab_data_dir }}/config:/etc/gitlab
       - {{ gitlab_data_dir }}/logs:/var/log/gitlab
       - {{ gitlab_data_dir }}/data:/var/opt/gitlab
+    shm_size: '256m'
