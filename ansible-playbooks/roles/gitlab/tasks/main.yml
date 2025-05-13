@@ -1,84 +1,104 @@
 ---
-- name: Install GitLab CE on Ubuntu
-  hosts: gitlab_server
+- name: Install and Configure GitLab on Rocky Linux
+  hosts: all
   become: true
   vars:
-    gitlab_external_url: "http://192.168.83.224"
-    gitlab_edition: "gitlab-ce"  
-    dns_servers:
-      - 8.8.8.8
-      - 8.8.4.4
+    gitlab_data_dir: "/srv/gitlab"
+    gitlab_external_url: "http://{{ ansible_default_ipv4.address }}"
+    gitlab_ssh_port: 2222
 
   tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-        cache_valid_time: 3600
-
-    - name: Install prerequisites
-      apt:
+    # مرحله 1: نصب Docker و پیش‌نیازها
+    - name: Install required packages
+      dnf:
         name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
           - curl
-          - openssh-server
-          - ca-certificates
-          - tzdata
-          - perl
-          - postfix
         state: present
 
-    - name: Ensure Postfix is started and enabled
-      systemd:
-        name: postfix
+    - name: Add Docker repository
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: '0644'
+
+    - name: Install Docker CE
+      dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+
+    - name: Install Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/latest/download/docker-compose-{{ 'linux' if ansible_system == 'Linux' else 'darwin' }}-{{ 'x86_64' if ansible_architecture == 'x86_64' else 'aarch64' }}"
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    # 2 : config Docker
+    - name: Start and enable Docker service
+      service:
+        name: docker
         state: started
         enabled: yes
 
-    - name: Set DNS servers in Netplan
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Configure Docker daemon
       copy:
         content: |
-          network:
-            version: 2
-            ethernets:
-              ens33:
-                nameservers:
-                  addresses:
-                    - 8.8.8.8
-                    - 8.8.4.4
-        dest: /etc/netplan/01-netcfg.yaml
+          {
+            "exec-opts": ["native.cgroupdriver=systemd"],
+            "log-driver": "json-file",
+            "log-opts": {
+              "max-size": "100m"
+            },
+            "storage-driver": "overlay2"
+          }
+        dest: /etc/docker/daemon.json
         mode: '0644'
-      notify: Apply Netplan
 
-    - name: Add GitLab package repository
-      shell: curl https://packages.gitlab.com/install/repositories/gitlab/{{ gitlab_edition }}/script.deb.sh | bash
-      args:
-        creates: /etc/apt/sources.list.d/gitlab_{{ gitlab_edition }}.list
-      register: add_repo
-      retries: 3
-      delay: 5
-      until: add_repo.rc == 0
-      ignore_errors: yes  
+    - name: Reload Docker daemon
+      command: systemctl reload docker
 
-    - name: Update apt cache after adding repository
-      apt:
-        update_cache: yes
-      when: add_repo.rc == 0
+    # 3: run gitlab 
+    - name: Create GitLab directories
+      file:
+        path: "{{ gitlab_data_dir }}/{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - config
+        - logs
+        - data
 
-    - name: Install GitLab
-      apt:
-        name: "{{ gitlab_edition }}"
+    - name: Create docker-compose.yml for GitLab
+      template:
+        src: templates/docker-compose.yml.j2
+        dest: "{{ gitlab_data_dir }}/docker-compose.yml"
+        mode: '0644'
+
+    - name: Run GitLab container
+      community.docker.docker_compose:
+        project_src: "{{ gitlab_data_dir }}"
         state: present
-      environment:
-        EXTERNAL_URL: "{{ gitlab_external_url }}"
 
-    - name: Reconfigure GitLab
-      command: gitlab-ctl reconfigure
-      when: add_repo.rc == 0
-
-    - name: Ensure GitLab services are running
-      systemd:
-        name: gitlab-runsvdir
-        state: started
-        enabled: yes
-
-  handlers:
-    - name: Apply Netplan
-      command: netplan apply
+    - name: Open firewall ports
+      firewalld:
+        port: "{{ item }}/tcp"
+        permanent: yes
+        state: enabled
+        immediate: yes
+      loop:
+        - 80
+        - 443
+        - "{{ gitlab_ssh_port }}"
