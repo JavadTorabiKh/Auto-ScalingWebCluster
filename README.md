@@ -133,27 +133,29 @@ Each role (docker, packages_base) includes Molecule tests:
 
 ## 🛠️ Customization
 
-Add New Roles: Create a new directory under ansible/roles/ with tasks/main.yml and defaults/main.yml.
-Extend Inventory: Update env_inventory.py to support additional server attributes.
-Modify Pipeline: Adjust .gitlab-ci.yml to add new stages or jobs.
+- Add New Roles: Create a new directory under ansible/roles/ with tasks/main.yml and defaults/main.yml.
+- Extend Inventory: Update env_inventory.py to support additional server attributes.
+- Modify Pipeline: Adjust .gitlab-ci.yml to add new stages or jobs.
 
 ## 📝 Notes
 
-Ensure environment variables are securely stored in GitLab.
-Review ansible.cfg for custom Ansible settings (e.g., timeouts, SSH options).
-For large deployments, consider using a custom Docker image with pre-installed dependencies to reduce pipeline runtime.
+- Ensure environment variables are securely stored in GitLab.
+- Review ansible.cfg for custom Ansible settings (e.g., timeouts, SSH options).
+- For large deployments, consider using a custom Docker image with pre-installed dependencies to reduce pipeline runtime.
 
 ## 🤝 Contributing
 Contributions are welcome! Please:
 
-Fork the repository.
-Create a feature branch (git checkout -b feature/awesome-feature).
-Commit changes (git commit -m 'Add awesome feature').
-Push to the branch (git push origin feature/awesome-feature).
-Open a pull request.
+1. Fork the repository.
+2. Create a feature branch (git checkout -b feature/awesome-feature).
+3. Commit changes (git commit -m 'Add awesome feature').
+4. Push to the branch (git push origin feature/awesome-feature).
+5. Open a pull request.
 
 ## 📧 Contact
 For questions or support, reach out via [GitLab Issues](/issues) or email [javadtorabi462@gmail.com].
+
+---
 
 Powered by Ansible and GitLab CI/CD
 
