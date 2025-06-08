@@ -1,0 +1,132 @@
+```yaml
+# Use a lightweight Python image as the default for linting and testing
+image: python:3.10-slim
+
+# Define pipeline stages
+stages:
+  - lint
+  - test
+  - check_config
+  - plan
+  - apply
+
+# Cache pip dependencies to speed up builds
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - $HOME/.cache/pip
+
+# Global variables
+variables:
+  ANSIBLE_FORCE_COLOR: "1"  # Enable colored output for better readability
+  PIP_CACHE_DIR: "$HOME/.cache/pip"
+
+# Common setup for all jobs
+before_script:
+  # Set Ansible configuration and roles path
+  - export ANSIBLE_CONFIG="$CI_PROJECT_DIR/ansible/ansible.cfg"
+  - export ANSIBLE_ROLES_PATH="$CI_PROJECT_DIR/ansible/roles"
+  # Upgrade pip and install dependencies
+  - python3 -m pip install --user --upgrade pip
+  - python3 -m pip install --user "ansible>=2.18" ansible-lint yamllint molecule molecule-docker docker
+  - export PATH="$HOME/.local/bin:$PATH"
+  # Install Ansible Galaxy dependencies
+  - ansible-galaxy install -r ansible/requirements.yml
+
+# Lint YAML and Ansible files
+lint:
+  stage: lint
+  script:
+    - yamllint -c .yamllint ansible/  # Use custom .yamllint config if present
+    - ansible-lint ansible/ --profile production  # Enforce production-grade linting
+  retry:
+    max: 2  # Retry on transient failures
+  artifacts:
+    paths:
+      - ansible/*.log
+    expire_in: 1 week
+
+# Run Molecule tests for roles in parallel
+test:
+  stage: test
+  parallel:
+    matrix:
+      - ROLE: [docker, packages_base]  # Test each role in parallel
+  script:
+    - cd ansible/roles/$ROLE
+    - molecule test
+  retry:
+    max: 2
+  artifacts:
+    paths:
+      - ansible/roles/$ROLE/molecule/default/*.log
+    expire_in: 1 week
+
+# Check and apply DNS configuration
+dns_config:
+  stage: check_config
+  image: docker.io/ansible/ansible-runner:latest
+  script:
+    # Simulate DNS changes first
+    - ansible-playbook ansible/playbooks/dns.yml -i ansible/inventory/env_inventory.py --check --diff
+    # Apply DNS changes if simulation passes
+    - ansible-playbook ansible/playbooks/dns.yml -i ansible/inventory/env_inventory.py --diff
+  artifacts:
+    paths:
+      - ansible/*.log
+    expire_in: 1 week
+
+# Plan changes for main playbook
+plan:
+  stage: plan
+  image: docker.io/ansible/ansible-runner:latest
+  script:
+    - ansible-playbook ansible/playbooks/main.yml -i ansible/inventory/env_inventory.py --check --diff --skip-tags dns
+  artifacts:
+    paths:
+      - ansible/*.log
+    expire_in: 1 week
+
+# Apply changes manually
+apply:
+  stage: apply
+  image: docker.io/ansible/ansible-runner:latest
+  when: manual
+  script:
+    - ansible-playbook ansible/playbooks/main.yml -i ansible/inventory/env_inventory.py --skip-tags dns
+  artifacts:
+    paths:
+      - ansible/*.log
+    expire_in: 1 week
+```
+
+---
+
+### **2. `README.md`**
+
+This file is the same as provided, included here for completeness.
+
+<xaiArtifact artifact_id="d609cbb0-cc72-4f28-bd1e-0db9faf33d3a" artifact_version_id="529f0743-0968-431b-a011-288de388bc29" title="README.md" contentType="text/markdown">
+```markdown
+# Ansible Infrastructure Automation 🚀
+
+Welcome to the **Ansible Infrastructure Automation** project! This repository provides a robust framework for managing server infrastructure using Ansible, integrated with a GitLab CI/CD pipeline for automated linting, testing, and deployment. Whether you're setting up Docker, installing base packages, or configuring DNS, this project has you covered with a modular and scalable design.
+
+![Ansible Logo](https://www.ansible.com/hubfs/2016_Images/AnsibleMark_RGB_RedWhite.png)
+
+## ✨ Features
+- **Dynamic Inventory**: Uses a Python script (`env_inventory.py`) to generate server lists from environment variables, eliminating static host files.
+- **Modular Roles**: Organized roles for Docker and base package installation, with Molecule tests for validation.
+- **CI/CD Pipeline**: Automated linting, testing, planning, and applying changes via GitLab CI.
+- **DNS Management**: Dedicated playbook for DNS configuration.
+- **Error Handling**: Retries and artifact logging for robust pipeline execution.
+
+## 📋 Prerequisites
+
+To use this project, ensure the following are set up:
+
+1. **Python 3 and pip**:
+   - Install Python 3 and pip: `dnf install python3-pip` (Rocky) or `apt install python3-pip` (Ubuntu).
+
+2. **Docker Engine**:
+   - Install Docker CE following the [official instructions](https://docs.docker
