@@ -44,20 +44,20 @@ To use this project, ensure the following are set up:
 
 ## 🗂️ Repository Structure
 ```plain
-    .
-    ├── .gitlab-ci.yml                  # GitLab CI pipeline definition
-    ├── README.md                      # You're reading it!
-    └── ansible
-        ├── ansible.cfg                 # Ansible configuration
-        ├── requirements.yml            # Ansible Galaxy dependencies
-        ├── inventory
-        │   └── env_inventory.py       # Dynamic inventory script
-        ├── playbooks
-        │   ├── main.yml               # Main playbook
-        │   └── dns.yml                # DNS configuration playbook
-        ├── roles
-        │   ├── docker                 # Role for Docker setup
-        │   └── packages_base          # Role for base package installation
+.
+├── .gitlab-ci.yml                  # GitLab CI pipeline definition
+├── README.md                      # You're reading it!
+└── ansible
+    ├── ansible.cfg                 # Ansible configuration
+    ├── requirements.yml            # Ansible Galaxy dependencies
+    ├── inventory
+    │   └── env_inventory.py       # Dynamic inventory script
+    ├── playbooks
+    │   ├── main.yml               # Main playbook
+    │   └── dns.yml                # DNS configuration playbook
+    ├── roles
+    │   ├── docker                 # Role for Docker setup
+    │   └── packages_base          # Role for base package installation
 ```
 
 ## 🚀 Getting Started
