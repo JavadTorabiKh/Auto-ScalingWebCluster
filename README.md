@@ -90,21 +90,13 @@ To use this project, ensure the following are set up:
 ## 🛠️ CI/CD Pipeline
 The GitLab CI pipeline automates the following stages:
 
-Stage | Description
-
-lint | Runs yamllint and ansible-lint to ensure code quality.
-
-
-test | Executes Molecule tests for roles in parallel (e.g., docker, packages_base).
-
-
-check_config | Simulates and applies DNS configuration changes.
-
-
-plan | Simulates changes for the main playbook (--check --diff).
-
-
-apply | Applies changes manually to target servers.
+| Stage | Description |
+|---------|---------|
+| lint    | Runs yamllint and ansible-lint to ensure code quality.   |
+| test    | Executes Molecule tests for roles in parallel (e.g., docker, packages_base).   |
+| check_config    |  Simulates and applies DNS configuration changes.   |
+| plan    | Simulates changes for the main playbook (--check --diff).   |
+| apply    | Applies changes manually to target servers.   |
 
 
 ## Artifacts
