@@ -2,7 +2,7 @@
 
 Welcome to the Ansible Infrastructure Automation project! This repository provides a robust framework for managing server infrastructure using Ansible, integrated with a GitLab CI/CD pipeline for automated linting, testing, and deployment. Whether you're setting up Docker, installing base packages, or configuring DNS, this project has you covered with a modular and scalable design.
 
-![Ansible Logo](https://www.ansible.com/hubfs/2016_Images/AnsibleMark_RGB_RedWhite.png)
+![Ansible Logo](f7a862c55030df34d85a197b1f922ba3.svg)
 ## ✨ Features
 
 - Dynamic Inventory: Uses a Python script (env_inventory.py) to generate server lists from environment variables, eliminating static host files.
