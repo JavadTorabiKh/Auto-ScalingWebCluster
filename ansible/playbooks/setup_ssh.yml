@@ -4,6 +4,7 @@
   become: yes
   vars:
     ssh_public_key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzf8YMVRqkhSzJNqJpPwo9VqJC25J1CQ+xSN/+fVYjKn6koG8A/9BHNj07OhCBa90Z+83qlSKmQYZ/ZgkT2UpzjRZAxVRzRlt1tLMbDhbgxAGZe96CyJypspia4+Dg+IROTMLKAY6VauWtlI10WS89BEhYJ0DHbwmQmTlPpIjd7EGUNmMivfQku36Jg3sQ6EHx4FkXNojg+qbtnUfYcKjE3gbMDettGaK4cVn8MJ5oWgD9L8B7VHfFlEr7o7QTk41tCI36rpT1RCwOHRgSpS5kbQo+/ed5vSXnuhy/BxFjj2WjHwPIcynw4ZJcBVKLP1IiPGrorTxECXfhTn5VQngaQIDAQAB"  # کلید عمومی شما اینجا قرار می‌گیرد
+
     ansible_user: "j"
 
   tasks:
@@ -30,8 +31,7 @@
             regexp: '^PasswordAuthentication'
             line: 'PasswordAuthentication no'
             state: present
-          notify:
-            - restart sshd
+          notify: restart sshd
 
         - name: Disable root login
           lineinfile:
@@ -39,11 +39,10 @@
             regexp: '^PermitRootLogin'
             line: 'PermitRootLogin no'
             state: present
-          notify:
-            - restart sshd
+          notify: restart sshd
 
-      handlers:
-        - name: restart sshd
-          service:
-            name: sshd
-            state: restarted
+  handlers:
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted
