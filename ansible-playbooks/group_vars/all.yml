@@ -1,8 +1,0 @@
-
-# Environment marker (override in environment-specific files)
-env: production
-debug: false
-
-logging:
-  level: info
-  path: /var/log/app
