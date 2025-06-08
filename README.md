@@ -1,12 +1,14 @@
-Ansible Infrastructure Automation 🚀
+# Ansible Infrastructure Automation 🚀
+
 Welcome to the Ansible Infrastructure Automation project! This repository provides a robust framework for managing server infrastructure using Ansible, integrated with a GitLab CI/CD pipeline for automated linting, testing, and deployment. Whether you're setting up Docker, installing base packages, or configuring DNS, this project has you covered with a modular and scalable design.
+
 ## ✨ Features
 
-Dynamic Inventory: Uses a Python script (env_inventory.py) to generate server lists from environment variables, eliminating static host files.
-Modular Roles: Organized roles for Docker and base package installation, with Molecule tests for validation.
-CI/CD Pipeline: Automated linting, testing, planning, and applying changes via GitLab CI.
-DNS Management: Dedicated playbook for DNS configuration.
-Error Handling: Retries and artifact logging for robust pipeline execution.
+- Dynamic Inventory: Uses a Python script (env_inventory.py) to generate server lists from environment variables, eliminating static host files.
+- Modular Roles: Organized roles for Docker and base package installation, with Molecule tests for validation.
+- CI/CD Pipeline: Automated linting, testing, planning, and applying changes via GitLab CI.
+- DNS Management: Dedicated playbook for DNS configuration.
+- Error Handling: Retries and artifact logging for robust pipeline execution.
 
 📋 Prerequisites
 To use this project, ensure the following are set up:
