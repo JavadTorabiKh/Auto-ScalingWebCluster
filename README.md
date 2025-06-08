@@ -64,8 +64,8 @@ To use this project, ensure the following are set up:
 
 1. Clone the Repository:
 ```bash
-    git clone <repository-url>
-    cd <repository-name>
+    git clone https://github.com/JavadTorabiKh/DevOpsAnsible.git
+    cd DevOpsAnsible
 ```
 
 2. Set Up GitLab CI:
