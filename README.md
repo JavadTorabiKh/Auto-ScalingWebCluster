@@ -2,7 +2,8 @@
 
 Welcome to the Ansible Infrastructure Automation project! This repository provides a robust framework for managing server infrastructure using Ansible, integrated with a GitLab CI/CD pipeline for automated linting, testing, and deployment. Whether you're setting up Docker, installing base packages, or configuring DNS, this project has you covered with a modular and scalable design.
 
-![Ansible Logo](images.jpeg)
+    ![Ansible Logo](images.jpeg)
+
 ## ✨ Features
 
 - Dynamic Inventory: Uses a Python script (env_inventory.py) to generate server lists from environment variables, eliminating static host files.
@@ -14,25 +15,27 @@ Welcome to the Ansible Infrastructure Automation project! This repository provid
 ## 📋 Prerequisites
 To use this project, ensure the following are set up:
 
-Python 3 and pip:
+1. Python 3 and pip:
 
-Install Python 3 and pip: dnf install python3-pip (Rocky) or apt install python3-pip (Ubuntu).
+- Install Python 3 and pip: 
+```bash
+    dnf install python3-pip  # For Rocky Linux
+    apt install python3-pip  # For Ubuntu
+```
+2. Docker Engine:
 
-
-Docker Engine:
-
-Install Docker CE following the official instructions.
-
-
-SSH Key Distribution:
-
-Copy the runner's public SSH key to managed servers:
-cat ~/.ssh/id_rsa.pub | ssh <user>@<server> 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+- Install Docker CE following the official instructions.
 
 
+3. SSH Key Distribution:
+- Copy the runner's public SSH key to managed servers:
 
+```bash
+    Copy the runner's public SSH key to managed servers:
+    cat ~/.ssh/id_rsa.pub | ssh <user>@<server> 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+```
 
-GitLab Environment Variables:
+4. GitLab Environment Variables:
 
 Define server details in GitLab CI/CD Settings → Variables (e.g., SERVER1_DATA, SERVER2_DATA).
 Format: See ansible/inventory/env_inventory.py for details.
