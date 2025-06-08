@@ -2,7 +2,7 @@
 
 Welcome to the Ansible Infrastructure Automation project! This repository provides a robust framework for managing server infrastructure using Ansible, integrated with a GitLab CI/CD pipeline for automated linting, testing, and deployment. Whether you're setting up Docker, installing base packages, or configuring DNS, this project has you covered with a modular and scalable design.
 
-    ![Ansible Logo](images.jpeg)
+![Ansible Logo](images.jpeg)
 
 ## ✨ Features
 
@@ -24,7 +24,7 @@ To use this project, ensure the following are set up:
 ```
 2. Docker Engine:
 
-- Install Docker CE following the official instructions.
+- Install Docker CE following the official instructions: https://docs.docker.com/engine/install/
 
 
 3. SSH Key Distribution:
@@ -37,58 +37,58 @@ To use this project, ensure the following are set up:
 
 4. GitLab Environment Variables:
 
-Define server details in GitLab CI/CD Settings → Variables (e.g., SERVER1_DATA, SERVER2_DATA).
-Format: See ansible/inventory/env_inventory.py for details.
+- Define server details in GitLab CI/CD Settings → Variables (e.g., SERVER1_DATA, SERVER2_DATA).
+- Format: See ansible/inventory/env_inventory.py for details.
 
 
 
-🗂️ Repository Structure
-.
-├── .gitlab-ci.yml                  # GitLab CI pipeline definition
-├── README.md                      # You're reading it!
-└── ansible
-    ├── ansible.cfg                 # Ansible configuration
-    ├── requirements.yml            # Ansible Galaxy dependencies
-    ├── inventory
-    │   └── env_inventory.py       # Dynamic inventory script
-    ├── playbooks
-    │   ├── main.yml               # Main playbook
-    │   └── dns.yml                # DNS configuration playbook
-    ├── roles
-    │   ├── docker                 # Role for Docker setup
-    │   └── packages_base          # Role for base package installation
+## 🗂️ Repository Structure
+```plain
+    .
+    ├── .gitlab-ci.yml                  # GitLab CI pipeline definition
+    ├── README.md                      # You're reading it!
+    └── ansible
+        ├── ansible.cfg                 # Ansible configuration
+        ├── requirements.yml            # Ansible Galaxy dependencies
+        ├── inventory
+        │   └── env_inventory.py       # Dynamic inventory script
+        ├── playbooks
+        │   ├── main.yml               # Main playbook
+        │   └── dns.yml                # DNS configuration playbook
+        ├── roles
+        │   ├── docker                 # Role for Docker setup
+        │   └── packages_base          # Role for base package installation
+```
 
-🚀 Getting Started
+## 🚀 Getting Started
 
-Clone the Repository:
-git clone <repository-url>
-cd <repository-name>
+1. Clone the Repository:
+```bash
+    git clone <repository-url>
+    cd <repository-name>
+```
 
+2. Set Up GitLab CI:
 
-Set Up GitLab CI:
-
-Configure environment variables in GitLab CI/CD Settings → Variables.
-Ensure your runner has access to the target servers via SSH.
-
-
-Run Locally (Optional):
-
-Install dependencies:
-pip3 install --user ansible ansible-lint yamllint molecule molecule-docker docker
-ansible-galaxy install -r ansible/requirements.yml
+- Configure environment variables in GitLab CI/CD Settings → Variables.
+- Ensure your runner has access to the target servers via SSH.
 
 
-Run the main playbook:
-ansible-playbook ansible/playbooks/main.yml -i ansible/inventory/env_inventory.py
+3. Run Locally (Optional):
 
+- Install dependencies:
+```bash
+    pip3 install --user ansible ansible-lint yamllint molecule molecule-docker docker
+    ansible-galaxy install -r ansible/requirements.yml
+```
 
+4. Run the main playbook:
+```bash
+    ansible-playbook ansible/playbooks/main.yml -i ansible/inventory/env_inventory.py
+```
 
-
-
-🛠️ CI/CD Pipeline
+## 🛠️ CI/CD Pipeline
 The GitLab CI pipeline automates the following stages:
-
-
 
 Stage
 Description
@@ -115,35 +115,35 @@ apply
 Applies changes manually to target servers.
 
 
-Artifacts
+## Artifacts
 
-Logs are stored as artifacts for 1 week to debug failures.
-Use the GitLab UI to trigger the apply stage manually.
+- Logs are stored as artifacts for 1 week to debug failures.
+- Use the GitLab UI to trigger the apply stage manually.
 
-🧪 Testing with Molecule
+## 🧪 Testing with Molecule
 Each role (docker, packages_base) includes Molecule tests:
 
-Navigate to ansible/roles/<role>/molecule/default/.
+- Navigate to ansible/roles/<role>/molecule/default/.
 
-Run tests:
-cd ansible/roles/docker
-molecule test
+- Run tests:
+```bash
+    cd ansible/roles/docker
+    molecule test
+```
 
-
-
-🛠️ Customization
+## 🛠️ Customization
 
 Add New Roles: Create a new directory under ansible/roles/ with tasks/main.yml and defaults/main.yml.
 Extend Inventory: Update env_inventory.py to support additional server attributes.
 Modify Pipeline: Adjust .gitlab-ci.yml to add new stages or jobs.
 
-📝 Notes
+## 📝 Notes
 
 Ensure environment variables are securely stored in GitLab.
 Review ansible.cfg for custom Ansible settings (e.g., timeouts, SSH options).
 For large deployments, consider using a custom Docker image with pre-installed dependencies to reduce pipeline runtime.
 
-🤝 Contributing
+## 🤝 Contributing
 Contributions are welcome! Please:
 
 Fork the repository.
@@ -152,10 +152,8 @@ Commit changes (git commit -m 'Add awesome feature').
 Push to the branch (git push origin feature/awesome-feature).
 Open a pull request.
 
-📧 Contact
-For questions or support, reach out via [GitLab Issues](/issues) or email [your-email@example.com].
-
-Built with ❤️ by [Your Name/Team]\
+## 📧 Contact
+For questions or support, reach out via [GitLab Issues](/issues) or email [javadtorabi462@gmail.com].
 
 Powered by Ansible and GitLab CI/CD
 
