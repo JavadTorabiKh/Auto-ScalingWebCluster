@@ -44,7 +44,7 @@ To use this project, ensure the following are set up:
 
 ## 🗂️ Repository Structure
 ```plain
-.
+DevOpsAnsible
 ├── .gitlab-ci.yml                  # GitLab CI pipeline definition
 ├── README.md                      # You're reading it!
 └── ansible
