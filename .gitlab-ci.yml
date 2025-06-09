@@ -5,8 +5,8 @@ stages:
 variables:
   ANSIBLE_FORCE_COLOR: "1"
   ANSIBLE_CONFIG: "ansible/ansible.cfg"
-  GITLAB_HOST: "192.168.0.213"  # آیپی سرور شما
-  SSH_PRIVATE_KEY: "$SSH_PRIVATE_KEY"  # کلید SSH از متغیرهای GitLab
+  GITLAB_HOST: "192.168.0.213"  # Ips
+  SSH_PRIVATE_KEY: "$SSH_PRIVATE_KEY"  # ssh keys
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq ansible git sshpass
@@ -42,11 +42,11 @@ deploy_gitlab:
     - pip install ansible
     - ansible-playbook -i ansible/inventory/env_inventory.py ansible/playbooks/02-gitlab.yml --become --become-method=sudo --become-user=root
     - echo "Waiting for GitLab to initialize (3 minutes)..."
-    - sleep 180  # تأخیر برای راه‌اندازی کامل GitLab
+    - sleep 180  # delay GitLab
     - |
       echo "GitLab should be available at:"
       echo "http://$GITLAB_HOST"
-      echo "http://$GITLAB_HOST:2222"  # اگر پورت SSH را تغییر دادید
+      echo "http://$GITLAB_HOST:2222" 
   when: manual
   only:
     - tags
