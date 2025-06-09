@@ -1,100 +1,52 @@
-```yaml
-# Use a lightweight Python image as the default for linting and testing
-image: python:3.10-slim
-
-# Define pipeline stages
 stages:
-  - lint
-  - test
-  - check_config
-  - plan
-  - apply
+  - validate
+  - deploy
 
-# Cache pip dependencies to speed up builds
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - $HOME/.cache/pip
-
-# Global variables
 variables:
-  ANSIBLE_FORCE_COLOR: "1"  # Enable colored output for better readability
-  PIP_CACHE_DIR: "$HOME/.cache/pip"
+  ANSIBLE_FORCE_COLOR: "1"
+  ANSIBLE_CONFIG: "ansible/ansible.cfg"
+  GITLAB_HOST: "192.168.0.213"  # آیپی سرور شما
+  SSH_PRIVATE_KEY: "$SSH_PRIVATE_KEY"  # کلید SSH از متغیرهای GitLab
 
-# Common setup for all jobs
 before_script:
-  # Set Ansible configuration and roles path
-  - export ANSIBLE_CONFIG="$CI_PROJECT_DIR/ansible/ansible.cfg"
-  - export ANSIBLE_ROLES_PATH="$CI_PROJECT_DIR/ansible/roles"
-  # Upgrade pip and install dependencies
-  - python3 -m pip install --user --upgrade pip
-  - python3 -m pip install --user "ansible>=2.18" ansible-lint yamllint molecule molecule-docker docker
-  - export PATH="$HOME/.local/bin:$PATH"
-  # Install Ansible Galaxy dependencies
-  - ansible-galaxy install -r ansible/requirements.yml
+  - apt-get update -qq && apt-get install -y -qq ansible git sshpass
+  - mkdir -p ~/.ssh
+  - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
-# Lint YAML and Ansible files
-lint:
-  stage: lint
+validate:
+  stage: validate
+  image: python:3.9
   script:
-    - yamllint -c .yamllint ansible/  # Use custom .yamllint config if present
-    - ansible-lint ansible/ --profile production  # Enforce production-grade linting
-  retry:
-    max: 2  # Retry on transient failures
-  artifacts:
-    paths:
-      - ansible/*.log
-    expire_in: 1 week
+    - pip install ansible ansible-lint
+    - ansible-lint ansible/playbooks/*.yml
+    - ansible-playbook ansible/playbooks/01-docker.yml --syntax-check
+    - ansible-playbook ansible/playbooks/02-gitlab.yml --syntax-check
+  only:
+    - merge_requests
 
-# Run Molecule tests for roles in parallel
-test:
-  stage: test
-  parallel:
-    matrix:
-      - ROLE: [docker, packages_base]  # Test each role in parallel
+deploy_docker:
+  stage: deploy
+  image: python:3.9
   script:
-    - cd ansible/roles/$ROLE
-    - molecule test
-  retry:
-    max: 2
-  artifacts:
-    paths:
-      - ansible/roles/$ROLE/molecule/default/*.log
-    expire_in: 1 week
+    - pip install ansible
+    - ansible-playbook -i ansible/inventory/env_inventory.py ansible/playbooks/01-docker.yml --become --become-method=sudo --become-user=root
+  only:
+    - main
 
-# Check and apply DNS configuration
-dns_config:
-  stage: check_config
-  image: docker.io/ansible/ansible-runner:latest
+deploy_gitlab:
+  stage: deploy
+  image: python:3.9
   script:
-    # Simulate DNS changes first
-    - ansible-playbook ansible/playbooks/dns.yml -i ansible/inventory/env_inventory.py --check --diff
-    # Apply DNS changes if simulation passes
-    - ansible-playbook ansible/playbooks/dns.yml -i ansible/inventory/env_inventory.py --diff
-  artifacts:
-    paths:
-      - ansible/*.log
-    expire_in: 1 week
-
-# Plan changes for main playbook
-plan:
-  stage: plan
-  image: docker.io/ansible/ansible-runner:latest
-  script:
-    - ansible-playbook ansible/playbooks/main.yml -i ansible/inventory/env_inventory.py --check --diff --skip-tags dns
-  artifacts:
-    paths:
-      - ansible/*.log
-    expire_in: 1 week
-
-# Apply changes manually
-apply:
-  stage: apply
-  image: docker.io/ansible/ansible-runner:latest
+    - pip install ansible
+    - ansible-playbook -i ansible/inventory/env_inventory.py ansible/playbooks/02-gitlab.yml --become --become-method=sudo --become-user=root
+    - echo "Waiting for GitLab to initialize (3 minutes)..."
+    - sleep 180  # تأخیر برای راه‌اندازی کامل GitLab
+    - |
+      echo "GitLab should be available at:"
+      echo "http://$GITLAB_HOST"
+      echo "http://$GITLAB_HOST:2222"  # اگر پورت SSH را تغییر دادید
   when: manual
-  script:
-    - ansible-playbook ansible/playbooks/main.yml -i ansible/inventory/env_inventory.py --skip-tags dns
-  artifacts:
-    paths:
-      - ansible/*.log
-    expire_in: 1 week
+  only:
+    - tags

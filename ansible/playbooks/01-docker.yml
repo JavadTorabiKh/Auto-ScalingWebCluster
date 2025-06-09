@@ -1,0 +1,43 @@
+---
+- name: Install Docker and prerequisites
+  hosts: docker_servers
+  become: yes
+
+  tasks:
+    - name: Install dependencies
+      package:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+
+    - name: Add Docker repository
+      command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      when: ansible_distribution == "Rocky"
+
+    - name: Install Docker
+      package:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+
+    - name: Start and enable Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Verify Docker installation
+      command: docker --version
+      register: docker_version
+    - debug:
+        var: docker_version.stdout

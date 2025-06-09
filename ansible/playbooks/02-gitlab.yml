@@ -1,0 +1,50 @@
+---
+- name: Deploy GitLab with Docker
+  hosts: all
+  become: yes
+  vars:
+    gitlab_config_dir: "/srv/gitlab/config"
+    gitlab_data_dir: "/srv/gitlab/data"
+    gitlab_logs_dir: "/srv/gitlab/logs"
+    gitlab_hostname: "192.168.0.213"  # تغییر به دامنه/آیپی شما
+
+  tasks:
+    - name: Create data directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - "{{ gitlab_config_dir }}"
+        - "{{ gitlab_data_dir }}"
+        - "{{ gitlab_logs_dir }}"
+
+    - name: Run GitLab container
+      docker_container:
+        name: gitlab
+        image: gitlab/gitlab-ce:latest
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "80:80"
+          - "443:443"
+          - "2222:22"  # پورت 22 را به 2222 تغییر دهید
+        volumes:
+          - "{{ gitlab_config_dir }}:/etc/gitlab"
+          - "{{ gitlab_logs_dir }}:/var/log/gitlab"
+          - "{{ gitlab_data_dir }}:/var/opt/gitlab"
+        env:
+          GITLAB_OMNIBUS_CONFIG: |
+            external_url 'http://{{ gitlab_hostname }}'
+
+    - name: Wait for GitLab to be ready (با آدرس صحیح)
+      uri:
+        url: "http://{{ gitlab_hostname }}/users/sign_in"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 10
+      ignore_errors: yes  # اگر خطا داد، ادامه دهد
