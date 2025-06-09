@@ -6,7 +6,7 @@
     gitlab_config_dir: "/srv/gitlab/config"
     gitlab_data_dir: "/srv/gitlab/data"
     gitlab_logs_dir: "/srv/gitlab/logs"
-    gitlab_hostname: "192.168.0.213"  # تغییر به دامنه/آیپی شما
+    gitlab_hostname: "192.168.0.213"  # Ips
 
   tasks:
     - name: Create data directories
@@ -39,7 +39,7 @@
           GITLAB_OMNIBUS_CONFIG: |
             external_url 'http://{{ gitlab_hostname }}'
 
-    - name: Wait for GitLab to be ready (با آدرس صحیح)
+    - name: Wait for GitLab to be ready
       uri:
         url: "http://{{ gitlab_hostname }}/users/sign_in"
         status_code: 200
