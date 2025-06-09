@@ -30,7 +30,7 @@
         ports:
           - "80:80"
           - "443:443"
-          - "2222:22"  # پورت 22 را به 2222 تغییر دهید
+          - "2222:22"  
         volumes:
           - "{{ gitlab_config_dir }}:/etc/gitlab"
           - "{{ gitlab_logs_dir }}:/var/log/gitlab"
@@ -47,4 +47,4 @@
       until: result.status == 200
       retries: 60
       delay: 10
-      ignore_errors: yes  # اگر خطا داد، ادامه دهد
+      ignore_errors: yes  # errors
