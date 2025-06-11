@@ -45,56 +45,97 @@ To use this project, ensure the following are set up:
 ## 🗂️ Repository Structure
 ```plain
 DevOpsAnsible/
-├── .gitlab-ci.yml                  # GitLab CI/CD pipeline configuration
-├── README.md                       # Project documentation
-├── CHANGELOG.md                    # Project version history
-├── LICENSE                         # Project license file
-├── .ansible-lint                   # Ansible lint configuration
-├── requirements.txt                # Python dependencies
+├── .gitlab-ci.yml                  # Enhanced CI/CD pipeline
+├── README.md                       # Updated documentation
+├── CHANGELOG.md                    # Version history
+├── LICENSE                         # MIT/Apache license
+├── .ansible-lint                   # Linting rules
+├── requirements.txt                # Python deps
+├── tests/                          # Test directory
+│   ├── molecule/                   # Molecule tests
+│   └── test-requirements.txt       # Test dependencies
 └── ansible/
-    ├── ansible.cfg                 # Ansible configuration
-    ├── requirements.yml            # Ansible Galaxy dependencies
-    ├── vault.yml                   # Encrypted variables for secrets
+    ├── ansible.cfg                 # Config
+    ├── requirements.yml            # Galaxy roles
+    ├── vault.yml                   # Encrypted secrets
     ├── inventory/
-    │   ├── production/             # Production environment
-    │   │   ├── hosts              # Static inventory
-    │   │   └── group_vars/        # Group variables
-    │   ├── staging/                # Staging environment
+    │   ├── production/
+    │   │   ├── hosts              # Prod hosts
+    │   │   └── group_vars/
+    │   │       ├── all.yml        # Common vars
+    │   │       ├── docker.yml     # Docker-specific
+    │   │       └── gitlab.yml     # GitLab-specific
+    │   ├── staging/
     │   │   ├── hosts
     │   │   └── group_vars/
-    │   └── env_inventory.py        # Dynamic inventory script (optional)
+    │   └── env_inventory.py        # Dynamic inventory
     ├── playbooks/
-    │   ├── site.yml                # Main playbook
-    │   ├── docker.yml              # Docker setup playbook
-    │   ├── gitlab.yml              # GitLab setup playbook
-    │   ├── monitoring.yml          # Monitoring setup
-    │   └── backups.yml             # Backup configuration
+    │   ├── site.yml                # Master playbook
+    │   ├── docker.yml              # Docker setup
+    │   ├── gitlab.yml              # GitLab setup
+    │   ├── monitoring.yml          # Enhanced monitoring
+    │   ├── backups.yml             # Backup system
+    │   ├── security.yml            # Security hardening
+    │   └── maintenance.yml         # Maintenance tasks
     └── roles/
-        ├── common/                 # Common server setup
+        ├── common/                 # Enhanced common
         │   ├── tasks/
         │   │   ├── main.yml
         │   │   ├── packages.yml
-        │   │   └── security.yml
+        │   │   ├── security.yml
+        │   │   ├── users.yml
+        │   │   └── tuning.yml
         │   ├── handlers/
-        │   └── templates/
-        ├── docker/                 # Docker installation
+        │   ├── templates/
+        │   └── defaults/
+        ├── docker/                 # Enhanced Docker
         │   ├── tasks/
         │   │   ├── main.yml
         │   │   ├── install.yml
-        │   │   └── config.yml
+        │   │   ├── config.yml
+        │   │   ├── compose.yml     # Docker Compose
+        │   │   └── networks.yml    # Network config
+        │   ├── templates/
+        │   │   ├── daemon.json.j2
+        │   │   └── docker-compose.yml.j2
         │   ├── defaults/
-        │   ├── templates/
         │   └── vars/
-        ├── gitlab/                 # GitLab installation
+        ├── gitlab/                 # Enhanced GitLab
         │   ├── tasks/
         │   │   ├── main.yml
         │   │   ├── install.yml
-        │   │   └── config.yml
-        │   ├── handlers/
+        │   │   ├── config.yml
+        │   │   ├── runners.yml     # CI runners
+        │   │   └── backup.yml      # GitLab backup
         │   ├── templates/
+        │   │   ├── gitlab.rb.j2
+        │   │   └── backup.sh.j2
+        │   ├── defaults/
         │   └── vars/
-        ├── monitoring/             # Monitoring tools
-        └── backups/                # Backup configuration
+        ├── monitoring/             # Enhanced monitoring
+        │   ├── tasks/
+        │   │   ├── main.yml
+        │   │   ├── node_exporter.yml
+        │   │   ├── cadvisor.yml    # Container monitoring
+        │   │   └── alerts.yml      # Alert rules
+        │   ├── templates/
+        │   └── defaults/
+        ├── backups/                # Enhanced backups
+        │   ├── tasks/
+        │   │   ├── main.yml
+        │   │   ├── setup.yml
+        │   │   ├── gitlab.yml
+        │   │   └── docker.yml
+        │   ├── templates/
+        │   └── defaults/
+        └── security/              # New security role
+            ├── tasks/
+            │   ├── main.yml
+            │   ├── firewall.yml
+            │   ├── ssh_hardening.yml
+            │   └── audits.yml
+            ├── templates/
+            └── defaults/
 ```
 
 ## 🚀 Getting Started
