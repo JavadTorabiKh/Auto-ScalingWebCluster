@@ -44,20 +44,57 @@ To use this project, ensure the following are set up:
 
 ## 🗂️ Repository Structure
 ```plain
-DevOpsAnsible
-├── .gitlab-ci.yml                  # GitLab CI pipeline definition
-├── README.md                      # You're reading it!
-└── ansible
+DevOpsAnsible/
+├── .gitlab-ci.yml                  # GitLab CI/CD pipeline configuration
+├── README.md                       # Project documentation
+├── CHANGELOG.md                    # Project version history
+├── LICENSE                         # Project license file
+├── .ansible-lint                   # Ansible lint configuration
+├── requirements.txt                # Python dependencies
+└── ansible/
     ├── ansible.cfg                 # Ansible configuration
     ├── requirements.yml            # Ansible Galaxy dependencies
-    ├── inventory
-    │   └── env_inventory.py       # Dynamic inventory script
-    ├── playbooks
-    │   ├── main.yml               # Main playbook
-    │   └── dns.yml                # DNS configuration playbook
-    ├── roles
-    │   ├── docker                 # Role for Docker setup
-    │   └── packages_base          # Role for base package installation
+    ├── vault.yml                   # Encrypted variables for secrets
+    ├── inventory/
+    │   ├── production/             # Production environment
+    │   │   ├── hosts              # Static inventory
+    │   │   └── group_vars/        # Group variables
+    │   ├── staging/                # Staging environment
+    │   │   ├── hosts
+    │   │   └── group_vars/
+    │   └── env_inventory.py        # Dynamic inventory script (optional)
+    ├── playbooks/
+    │   ├── site.yml                # Main playbook
+    │   ├── docker.yml              # Docker setup playbook
+    │   ├── gitlab.yml              # GitLab setup playbook
+    │   ├── monitoring.yml          # Monitoring setup
+    │   └── backups.yml             # Backup configuration
+    └── roles/
+        ├── common/                 # Common server setup
+        │   ├── tasks/
+        │   │   ├── main.yml
+        │   │   ├── packages.yml
+        │   │   └── security.yml
+        │   ├── handlers/
+        │   └── templates/
+        ├── docker/                 # Docker installation
+        │   ├── tasks/
+        │   │   ├── main.yml
+        │   │   ├── install.yml
+        │   │   └── config.yml
+        │   ├── defaults/
+        │   ├── templates/
+        │   └── vars/
+        ├── gitlab/                 # GitLab installation
+        │   ├── tasks/
+        │   │   ├── main.yml
+        │   │   ├── install.yml
+        │   │   └── config.yml
+        │   ├── handlers/
+        │   ├── templates/
+        │   └── vars/
+        ├── monitoring/             # Monitoring tools
+        └── backups/                # Backup configuration
 ```
 
 ## 🚀 Getting Started
