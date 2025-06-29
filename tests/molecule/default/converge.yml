@@ -1,0 +1,13 @@
+---
+# Molecule test playbook for role validation
+
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: ../../../../ansible/roles/common
+      # Test variables can be defined here
+      common_packages:
+        - htop
+        - vim
+        - git
