@@ -1,0 +1,18 @@
+{
+  // Docker daemon configuration
+  // This template is managed by Ansible - do not edit manually
+  
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  },
+  "storage-driver": "overlay2",
+  "insecure-registries": [
+    {% for registry in docker_insecure_registries %}
+    "{{ registry }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "dns": {{ docker_dns_servers | to_json }},
+  "live-restore": true
+}

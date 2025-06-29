@@ -1,1 +1,7 @@
-pip==23.0.5
+# Python dependencies for this project
+ansible>=7.0.0          # Ansible core
+ansible-lint>=6.0.0     # Linting tool
+molecule>=5.0.0         # Testing framework
+docker>=6.0.0           # Python Docker SDK
+pywinrm>=0.4.0          # Windows remote management
+

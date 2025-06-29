@@ -1,52 +1,42 @@
+# GitLab CI/CD Pipeline Configuration
+# This file defines the continuous integration and deployment workflow
+
 stages:
-  - validate
-  - deploy
+  - lint       # Check Ansible syntax and best practices
+  - test       # Run Molecule tests
+  - deploy     # Deploy to environments
 
 variables:
-  ANSIBLE_FORCE_COLOR: "1"
-  ANSIBLE_CONFIG: "ansible/ansible.cfg"
-  GITLAB_HOST: "192.168.0.213"  # Ips
-  SSH_PRIVATE_KEY: "$SSH_PRIVATE_KEY"  # ssh keys
+  ANSIBLE_FORCE_COLOR: "1"  # Force color output for Ansible
 
 before_script:
-  - apt-get update -qq && apt-get install -y -qq ansible git sshpass
-  - mkdir -p ~/.ssh
-  - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-  - chmod 600 ~/.ssh/id_rsa
-  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - pip install -r requirements.txt  # Install Python dependencies
+  - ansible-galaxy install -r ansible/requirements.yml  # Install Ansible roles
 
-validate:
-  stage: validate
-  image: python:3.9
+lint:
+  stage: lint
   script:
-    - pip install ansible ansible-lint
-    - ansible-lint ansible/playbooks/*.yml
-    - ansible-playbook ansible/playbooks/01-docker.yml --syntax-check
-    - ansible-playbook ansible/playbooks/02-gitlab.yml --syntax-check
-  only:
-    - merge_requests
+    - ansible-lint ansible/playbooks/*.yml  # Lint all playbooks
+    - yamllint .                           # Check YAML syntax in all files
 
-deploy_docker:
+test:
+  stage: test
+  script:
+    - pip install -r tests/test-requirements.txt  # Install test dependencies
+    - cd tests/molecule && molecule test         # Run Molecule tests
+
+deploy_staging:
   stage: deploy
-  image: python:3.9
+  environment: staging
   script:
-    - pip install ansible
-    - ansible-playbook -i ansible/inventory/env_inventory.py ansible/playbooks/01-docker.yml --become --become-method=sudo --become-user=root
-  only:
-    - main
+    - ansible-playbook -i ansible/inventory/staging ansible/playbooks/site.yml
+  when: manual  # Requires manual trigger
 
-deploy_gitlab:
+deploy_prod:
   stage: deploy
-  image: python:3.9
+  environment: production
   script:
-    - pip install ansible
-    - ansible-playbook -i ansible/inventory/env_inventory.py ansible/playbooks/02-gitlab.yml --become --become-method=sudo --become-user=root
-    - echo "Waiting for GitLab to initialize (3 minutes)..."
-    - sleep 180  # delay GitLab
-    - |
-      echo "GitLab should be available at:"
-      echo "http://$GITLAB_HOST"
-      echo "http://$GITLAB_HOST:2222" 
-  when: manual
+    - ansible-playbook -i ansible/inventory/production ansible/playbooks/site.yml
+  when: manual  # Requires manual trigger
   only:
-    - tags
+    - tags      # Only deploy to prod on tagged commits

@@ -1,0 +1,33 @@
+---
+# Main playbook that orchestrates all other playbooks
+# This is the entry point for provisioning the entire infrastructure
+
+- name: Apply common configuration to all servers
+  hosts: all
+  become: true
+  roles:
+    - common  # Base system configuration
+
+- name: Configure Docker hosts
+  hosts: docker_servers
+  become: true
+  roles:
+    - docker  # Docker installation and configuration
+
+- name: Configure GitLab server
+  hosts: gitlab_servers
+  become: true
+  roles:
+    - gitlab  # GitLab installation and configuration
+
+- name: Apply security hardening
+  hosts: all
+  become: true
+  roles:
+    - security  # System security hardening
+
+- name: Set up monitoring
+  hosts: monitoring_servers
+  become: true
+  roles:
+    - monitoring  # Monitoring system setup

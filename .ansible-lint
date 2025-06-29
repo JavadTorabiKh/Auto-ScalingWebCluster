@@ -1,0 +1,15 @@
+# Ansible Lint Configuration
+# Rules documentation: https://ansible-lint.readthedocs.io/rules/
+
+# Skip these rules
+skip_list:
+  - '106'  # Role name does not match `^[a-z][a-z0-9_]+$` pattern
+  - '204'  # Lines should be no longer than 160 chars
+
+# Custom rules
+exclude_paths:
+  - tests/  # Exclude test files from linting
+
+# Rule severity levels
+warn_list:
+  - 'no-changed-when'  # Warn when tasks don't have changed_when
