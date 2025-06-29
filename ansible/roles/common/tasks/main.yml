@@ -1,0 +1,30 @@
+---
+# Main tasks file for common role
+# This role contains baseline configuration for all servers
+
+- name: Include OS-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+  when: ansible_os_family in ['Debian', 'RedHat']
+
+- name: Update all packages
+  package:
+    name: "*"
+    state: latest
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: Install base packages
+  include_tasks: packages.yml
+  tags: packages
+
+- name: Configure system users
+  include_tasks: users.yml
+  tags: users
+
+- name: Apply security hardening
+  include_tasks: security.yml
+  tags: security
+
+- name: System performance tuning
+  include_tasks: tuning.yml
+  tags: tuning
