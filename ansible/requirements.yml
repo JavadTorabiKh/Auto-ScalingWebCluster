@@ -1,0 +1,14 @@
+# Ansible Galaxy role dependencies
+
+- src: geerlingguy.docker
+  version: 7.0.0
+  name: external_docker  # Rename to avoid conflicts
+
+- src: geerlingguy.gitlab
+  version: 4.0.0
+
+- src: cloudalchemy.node_exporter
+  version: 2.0.0
+
+- src: nginxinc.nginx
+  version: 0.24.0
