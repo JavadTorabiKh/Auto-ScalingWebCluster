@@ -215,7 +215,7 @@ Contributions are welcome! Please:
 5. Open a pull request.
 
 ## 📧 Contact
-For questions or support, reach out via [GitLab Issues](/issues) or email [javadtorabi462@gmail.com].
+For questions or support, reach out via [GitLab Issues](/issues) or [email](javadtorabi462@gmail.com).
 
 ---
 
